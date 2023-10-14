@@ -35,6 +35,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_libserialport: # ^0.3.1 <- uncomment this after the 0.3.1 release of flutter_libserialport
+    git: # remove this and the next two lines after the release above is live
+      url: https://github.com/ajeeshklr/flutter_libserialport
+      ref: 849b23ac3228ce46a22b24009becf34765494403
 
 dev_dependencies:
   flutter_test:
