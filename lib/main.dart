@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
+import 'package:serial_app/serial_screen.dart';
 
 void main() {
   runApp(const MySerialApp());
@@ -11,7 +11,7 @@ class MySerialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Placeholder(),
+      home: SerialScreen(),
     );
   }
 }
