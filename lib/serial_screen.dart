@@ -19,7 +19,8 @@ class _SerialScreenState extends State<SerialScreen> {
     super.initState();
     _initPort();
     _listener = AppLifecycleListener(
-      onDetach: () => port.dispose(),
+      onInactive: () => port.close(),
+      onResume: () => port.openReadWrite(),
     );
   }
 
@@ -32,7 +33,6 @@ class _SerialScreenState extends State<SerialScreen> {
         ..stopBits = 1
         ..parity = SerialPortParity.none
         ..setFlowControl(SerialPortFlowControl.none);
-      port.flush();
     } catch (error) {
       print(error);
     }
@@ -47,7 +47,7 @@ class _SerialScreenState extends State<SerialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Serial App Demo"),
+        title: const Text("Chipsee Serial App Demo"),
       ),
       body: Center(
         child: Column(
@@ -55,7 +55,10 @@ class _SerialScreenState extends State<SerialScreen> {
           children: [
             ElevatedButton(
               onPressed: _sayHelloWorld,
-              child: const Text("Say Hello World"),
+              child: const Text(
+                "Say Hello World",
+                style: TextStyle(fontSize: 100),
+              ),
             ),
           ],
         ),
@@ -65,6 +68,7 @@ class _SerialScreenState extends State<SerialScreen> {
 
   @override
   void dispose() {
+    port.dispose();
     _listener.dispose();
     super.dispose();
   }
