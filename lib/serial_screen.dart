@@ -67,9 +67,10 @@ class _SerialScreenState extends State<SerialScreen> {
   }
 
   @override
-  void dispose() {
+  void deactivate() {
+    port.close();
     port.dispose();
     _listener.dispose();
-    super.dispose();
+    super.deactivate();
   }
 }
