@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 
@@ -12,34 +12,26 @@ class SerialScreen extends StatefulWidget {
 
 class _SerialScreenState extends State<SerialScreen> {
   SerialPort port = SerialPort("/dev/ttyS4");
-  late final AppLifecycleListener _listener;
+  late Timer timer;
+  String name = "Hello World";
 
   @override
   void initState() {
     super.initState();
-    _initPort();
-    _listener = AppLifecycleListener(
-      onInactive: () => port.close(),
-      onResume: () => port.openReadWrite(),
-    );
+    timer = Timer(const Duration(milliseconds: 500), () => _initPort());
   }
 
   void _initPort() {
-    try {
-      port.openReadWrite();
-      port.config = SerialPortConfig()
-        ..baudRate = 115200
-        ..bits = 8
-        ..stopBits = 1
-        ..parity = SerialPortParity.none
-        ..setFlowControl(SerialPortFlowControl.none);
-    } catch (error) {
-      print(error);
-    }
+    port.openReadWrite();
+    port.config = SerialPortConfig()
+      ..baudRate = 115200
+      ..bits = 8
+      ..stopBits = 1
+      ..parity = SerialPortParity.none
+      ..setFlowControl(SerialPortFlowControl.none);
   }
 
   void _sayHelloWorld() {
-    if (!port.isOpen) return;
     port.write(Uint8List.fromList("Hello World\n".codeUnits));
   }
 
@@ -55,8 +47,8 @@ class _SerialScreenState extends State<SerialScreen> {
           children: [
             ElevatedButton(
               onPressed: _sayHelloWorld,
-              child: const Text(
-                "Say Hello World",
+              child: Text(
+                name,
                 style: TextStyle(fontSize: 100),
               ),
             ),
@@ -70,7 +62,7 @@ class _SerialScreenState extends State<SerialScreen> {
   void deactivate() {
     port.close();
     port.dispose();
-    _listener.dispose();
+    timer.cancel();
     super.deactivate();
   }
 }

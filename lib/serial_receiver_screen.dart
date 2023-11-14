@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 
@@ -9,41 +10,32 @@ class SerialReceiverScreen extends StatefulWidget {
 }
 
 class _SerialRXState extends State<SerialReceiverScreen> {
-  late SerialPortReader reader;
   SerialPort port = SerialPort("/dev/ttyS4");
-  late final AppLifecycleListener _listener;
+  late SerialPortReader reader;
   List<String> received = [];
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     reader = SerialPortReader(port);
-    _listener = AppLifecycleListener(
-      onInactive: () {
-        port.close();
-        reader.close();
-      },
-      onResume: () {
-        port.openReadWrite();
+    timer = Timer(
+      const Duration(milliseconds: 500),
+      () {
+        _initPort();
         startListen();
       },
     );
-    _initPort();
   }
 
   void _initPort() {
-    try {
-      port.openReadWrite();
-      port.config = SerialPortConfig()
-        ..baudRate = 115200
-        ..bits = 8
-        ..stopBits = 1
-        ..parity = SerialPortParity.none
-        ..setFlowControl(SerialPortFlowControl.none);
-      startListen();
-    } catch (error) {
-      print(error);
-    }
+    port.openReadWrite();
+    port.config = SerialPortConfig()
+      ..baudRate = 115200
+      ..bits = 8
+      ..stopBits = 1
+      ..parity = SerialPortParity.none
+      ..setFlowControl(SerialPortFlowControl.none);
   }
 
   void startListen() {
@@ -52,6 +44,12 @@ class _SerialRXState extends State<SerialReceiverScreen> {
         received.add(String.fromCharCodes(data));
       });
     }, onError: (error) => print(error));
+  }
+
+  void clearList() {
+    setState(() {
+      received = [];
+    });
   }
 
   @override
@@ -68,22 +66,26 @@ class _SerialRXState extends State<SerialReceiverScreen> {
               received[index],
               style: const TextStyle(fontSize: 30),
             ),
-            subtitle: Text(
+            leading: Text(
               index.toString(),
-              style: const TextStyle(fontSize: 25),
+              style: const TextStyle(fontSize: 30),
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: clearList,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
 
   @override
   void deactivate() {
+    timer.cancel();
     reader.close();
     port.close();
     port.dispose();
-    _listener.dispose();
     super.deactivate();
   }
 }
