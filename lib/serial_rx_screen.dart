@@ -2,14 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 
-class SerialReceiverScreen extends StatefulWidget {
-  const SerialReceiverScreen({super.key});
+class SerialRXScreen extends StatefulWidget {
+  const SerialRXScreen({super.key});
 
   @override
-  State<SerialReceiverScreen> createState() => _SerialRXState();
+  State<SerialRXScreen> createState() => _SerialRXScreenState();
 }
 
-class _SerialRXState extends State<SerialReceiverScreen> {
+class _SerialRXScreenState extends State<SerialRXScreen> {
   SerialPort port = SerialPort("/dev/ttyS4");
   late SerialPortReader reader;
   List<String> received = [];

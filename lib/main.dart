@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:serial_app/serial_receiver_screen.dart';
-import 'package:serial_app/serial_screen.dart';
+import 'package:serial_app/serial_rx_screen.dart';
+import 'package:serial_app/serial_tx_screen.dart';
 
 void main() {
   runApp(const MySerialApp());
@@ -40,20 +40,20 @@ class _BottomNaviState extends State<BottomNavi> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Send',
+            icon: Icon(Icons.call_made),
+            label: 'TX',
           ),
           NavigationDestination(
-            icon: Icon(Icons.business),
-            label: 'Receive',
+            icon: Icon(Icons.call_received),
+            label: 'RX',
           ),
         ],
       ),
       body: <Widget>[
-        const SerialScreen(),
-        const SerialReceiverScreen(),
+        const SerialTXScreen(),
+        const SerialRXScreen(),
       ][currentPageIndex],
     );
   }
 }
+

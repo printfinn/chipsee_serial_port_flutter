@@ -3,17 +3,16 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 
-class SerialScreen extends StatefulWidget {
-  const SerialScreen({super.key});
+class SerialTXScreen extends StatefulWidget {
+  const SerialTXScreen({super.key});
 
   @override
-  State<SerialScreen> createState() => _SerialScreenState();
+  State<SerialTXScreen> createState() => _SerialTXScreenState();
 }
 
-class _SerialScreenState extends State<SerialScreen> {
+class _SerialTXScreenState extends State<SerialTXScreen> {
   SerialPort port = SerialPort("/dev/ttyS4");
   late Timer timer;
-  String name = "Hello World";
 
   @override
   void initState() {
@@ -32,7 +31,7 @@ class _SerialScreenState extends State<SerialScreen> {
   }
 
   void _sayHelloWorld() {
-    port.write(Uint8List.fromList("Hello World\n".codeUnits));
+    port.write(Uint8List.fromList("Hello Chipsee\n".codeUnits));
   }
 
   @override
@@ -47,8 +46,8 @@ class _SerialScreenState extends State<SerialScreen> {
           children: [
             ElevatedButton(
               onPressed: _sayHelloWorld,
-              child: Text(
-                name,
+              child: const Text(
+                "Hello Chipsee",
                 style: TextStyle(fontSize: 100),
               ),
             ),
